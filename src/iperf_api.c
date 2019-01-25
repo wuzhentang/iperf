@@ -43,6 +43,7 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -3517,6 +3518,7 @@ iperf_new_stream(struct iperf_test *test, int s, int sender)
 {
     struct iperf_stream *sp;
     int ret = 0;
+    struct stat buffer;
 
     char template[1024];
     if (test->tmp_template) {
@@ -3530,6 +3532,11 @@ iperf_new_stream(struct iperf_test *test, int s, int sender)
         if (tempdir == 0){
             tempdir = getenv("TMP");
         }
+        
+        if (stat("data/local/tmp", &buffer) == 0) {
+            tempdir = "/data/local/tmp";
+        }
+
         if (tempdir == 0){
             tempdir = "/tmp";
         }
